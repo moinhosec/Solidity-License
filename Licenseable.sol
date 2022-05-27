@@ -139,76 +139,11 @@ contract Licenseable is Ownable {
 
 }
 
-contract Usable is Licenseable {
-    
-    mapping(address => address) internal _usables;    
-
-    function addUsables(address[] memory usables_) public {        
-        require(_expireLicense[msg.sender] > block.timestamp);     
-
-        for (uint i=0; i < usables_.length; i++) {
-            _usables[usables_[i]] = msg.sender;            
-        }        
-
-    }
-
-    function usable(address usable_) public view returns (address){
-        return _usables[usable_];
-    }
-
-}
-
-contract Configurable is Usable {
-    mapping(address => Configuration) _configurations;
+contract Economy is Licenseable {
     //TESTNET 0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd
     //MAINNET 0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c
     address    internal _WETH   =  0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd;
 
-    struct Configuration {
-        address router;
-        bool BP;
-        uint BPvalue;
-        uint BPpercent;
-        uint purchase;
-        uint minAmount;
-        uint buy_divide;
-        address[] path;
-        address[] reverse_path;  
-        uint freeze;
-    }
-    
-    function configure(address router_, address[] memory path_,address[] memory reverse_path_, bool BP_, uint BPvalue_, uint BPpercent_,uint purchase_, uint minAmount_, uint buy_divide) public {
-        require(_expireLicense[msg.sender] > block.timestamp);
-        require(purchase_ >= BPvalue_);
-        require(BPpercent_ <= 100);
-        require(router_ != address(0));
-        require(path_[1] != address(0));
-
-        _configurations[msg.sender] = Configuration(
-            router_,
-            BP_,
-            BPvalue_,
-            BPpercent_,
-            purchase_,
-            minAmount_,
-            buy_divide,          
-            path_,
-            reverse_path_,
-            block.timestamp
-        );
-
-        for(uint i = 0; i < path_.length; i++){
-            IERC20(path_[i]).approve(router_, 2**256 - 1);    
-        }
-    }
-
-    function getConfigure() public view returns (Configuration memory) {
-        require(_expireLicense[msg.sender] > block.timestamp);
-        return _configurations[msg.sender]; 
-    }
-}
-
-contract Economy is Configurable {
     event Received(address from, uint256 value);
     event Withdrawal(address to,uint256 value);
 
