@@ -8,7 +8,7 @@ Licenças de uso, por sua vez, permitem a utilização de uma determinada aplica
 
 ## Product Deepdive
 
-### Mapa de alteração de estado da EVM
+### Mapa de alteração do estado da EVM
 
 
 ![image](https://user-images.githubusercontent.com/93963677/170633682-478a81de-23e0-4e51-8b20-1c8e662b8039.png)
